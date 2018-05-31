@@ -2,6 +2,8 @@
 import numpy as np
 import healpy as hp
 import lsst.sims.featureScheduler as fs
+from .config_writer import get_config
+
 
 target_maps = {}
 nside = fs.set_default_nside(nside=32)  # Required
@@ -46,7 +48,9 @@ for filtername in filters:
     bfs.append(fs.Strict_filter_basis_function(filtername=filtername))
     bfs.append(fs.Avoid_Fast_Revists(filtername=filtername, gap_min=240., nside=nside))
 
-    weights = np.array([3.0, 0.5, 1., 3., 3., 3.])
+    # weights = np.array([3.0, 0.5, 1., 3., 3., 3.])
+    weights = np.array(get_config('basis_function', 'weights', iflist=True))
+    print('THE WEIGHTS IS {}'.format(weights))
     # surveys.append(fs.Greedy_survey_fields(bfs, weights, block_size=1, filtername=filtername, dither=False,
     #                                        nside=nside, smoothing_kernel=9,
     #                                        tag_fields=True, tag_map=target_maps[filtername][1]))
